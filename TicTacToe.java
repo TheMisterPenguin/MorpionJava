@@ -1,20 +1,18 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.ArrayList;
 
 public class TicTacToe extends JFrame implements ActionListener{
 
     private JPanel g_panel = new JPanel(); 
     private JPanel t_panel = new JPanel();
-    private String joueur = "J1";
-    private ArrayList<ArrayList<JButton>> liste_boutons = new ArrayList<>();
-    JLabel label= new JLabel("Au tour de: "+this.joueur);
+    private String joueur;
+    private JButton[][] liste_boutons = new JButton[3][3];
+    JLabel label;
 
     public TicTacToe(){ 
         super("TicTacToe");
         this.setVisible(true);
-        this.centerOnScreen();
        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //ferme la fenêtre
         this.setSize(700,700); //taille de la fenêtre
@@ -22,18 +20,23 @@ public class TicTacToe extends JFrame implements ActionListener{
 
         /*Grille TicTacToe */
         g_panel.setLayout(new GridLayout(3,3,5,5)); //layout de la fenêtre
-        for(int i=0;i<9;i++){
-            JButton but=new JButton();
-            this.liste_boutons.add(but);
-            but.addActionListener(this);
-            g_panel.add(this.liste_boutons.get(i));
+        for(int i=0;i<3;i++){
+            for(int j=0;j<3;j++){
+                JButton but=new JButton();
+                this.liste_boutons[i][j] = but;
+                but.addActionListener(this);
+                g_panel.add(this.liste_boutons[i][j]);
+            }
         }
 
         /*Titre pour annoncer qui joue */
+        joueur="J1";
+        label= new JLabel("Au tour de J1");
         label.setHorizontalAlignment(JLabel.CENTER);
         label.setFont(new Font("Arial", Font.BOLD, 25));
         t_panel.add(label);
        
+
 
         this.add(t_panel,BorderLayout.SOUTH);
         this.add(g_panel);
@@ -41,26 +44,64 @@ public class TicTacToe extends JFrame implements ActionListener{
 
     public void actionPerformed(ActionEvent evt){
         Object source = evt.getSource();
-            for(int i=0;i<9;i++){
-                if (source == this.liste_boutons.get(i)){ // action a effectuer
-                    if(this.joueur.equals("J1")){
-                      
-                       this.joueur="J2";
-                       
-                    }else{
-                        this.liste_boutons.get(i).setText("O");
-                        this.liste_boutons.get(i).setFont(new Font("Arial", Font.BOLD, 50));
-                        this.joueur="J1";
+            for(int i=0;i<3;i++){
+                for(int j=0;j<3;j++){
+                    if (source == this.liste_boutons[i][j]){ // action a effectuer
+                        if(this.joueur.equals("J1")){
+                            setX(i,j);
+                            this.liste_boutons[i][j].setEnabled(false);
+                            this.joueur="J2";
+                        }else{
+                            setO(i,j);
+                            this.liste_boutons[i][j].setEnabled(false);
+                            this.joueur="J1";
+                        }
+                        label.setText("Au tour de: "+this.joueur);
                     }
-                    label.setText("Au tour de: "+this.joueur);
                 }
             }
+            vainqueur(this.joueur.equals("J1")?"X":"O");
     }
 
-    public boolean setX(){
-        this.liste_boutons.get(i).setText("X");
-        this.liste_boutons.get(i).setFont(new Font("Arial", Font.BOLD, 50));
+    public boolean setX(int x, int y){
+        this.liste_boutons[x][y].setText("X");
+        this.liste_boutons[x][y].setFont(new Font("Arial", Font.BOLD, 50));
+        return true;
     };
+
+    public boolean setO(int x, int y){
+        this.liste_boutons[x][y].setText("O");
+        this.liste_boutons[x][y].setFont(new Font("Arial", Font.BOLD, 50));
+        return true;
+    };
+
+    public void vainqueur(String element){
+        if(this.liste_boutons[0][0].getText().equals(element) && this.liste_boutons[0][1].getText().equals(element) && this.liste_boutons[0][2].getText().equals(element)){
+            label.setText("Le vainqueur est "+this.joueur);
+            this.liste_boutons[0][0].setForeground(Color.GREEN);
+            this.liste_boutons[0][1].setForeground(Color.GREEN);
+            this.liste_boutons[0][2].setForeground(Color.GREEN);
+        
+        }else if(this.liste_boutons[0][0].getText().equals(element) && this.liste_boutons[1][1].getText().equals(element) && this.liste_boutons[2][2].getText().equals(element)){
+            label.setText("Le vainqueur est "+this.joueur);
+
+        }else if(this.liste_boutons[0][0].getText().equals(element) && this.liste_boutons[1][0].getText().equals(element) && this.liste_boutons[2][0].getText().equals(element)){
+            label.setText("Le vainqueur est "+this.joueur);
+
+        }else if(this.liste_boutons[2][0].getText().equals(element) && this.liste_boutons[2][1].getText().equals(element) && this.liste_boutons[2][2].getText().equals(element)){
+            label.setText("Le vainqueur est "+this.joueur);
+
+        }else if(this.liste_boutons[0][2].getText().equals(element) && this.liste_boutons[1][2].getText().equals(element) && this.liste_boutons[2][2].getText().equals(element)){
+            label.setText("Le vainqueur est "+this.joueur);
+
+        }else if(this.liste_boutons[0][2].getText().equals(element) && this.liste_boutons[1][1].getText().equals(element) && this.liste_boutons[2][0].getText().equals(element)){
+            label.setText("Le vainqueur est "+this.joueur);
+        }
+
+    }
+        
+        
+    
 
     public static void main(String[] toto){
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
