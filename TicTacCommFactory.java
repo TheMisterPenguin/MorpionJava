@@ -1,5 +1,3 @@
-import java.rmi.*;
-
 public class TicTacCommFactory{
     private String address = "localhost";
     private Integer port = 1099;
@@ -21,32 +19,8 @@ public class TicTacCommFactory{
         return this;
     }
 
-    public TicTacComm getInstance(){
+    public TicTacComm build() throws Exception{
         return new TicTacComm(locObj, player, address, port);
     }
 }
 
-class TicTacComm {
-    private TicTacInterface remoteObj;
-
-    public TicTacComm(TicTacInterface obj, String player, String address, Integer port){
-        // On setup la connection RMI
-        // Coté serveur
-        try {
-            Naming.rebind("rmi://localhost" + ":" + port.toString() + "/Player" + player, obj);
-        } catch (Exception e) {
-            // TODO: handle exception
-        }
-        // Coté client
-        try {
-            remoteObj = (TicTacInterface) Naming.lookup("rmi://" + address + ":" + port.toString() + "/Player" + (player == "X" ? "O" : "X"));
-        }
-        catch(Exception e) {
-
-        }
-    }
-
-    public TicTacInterface remoteObj(){
-        return this.remoteObj;
-    }
-}
