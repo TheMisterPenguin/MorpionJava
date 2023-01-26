@@ -9,14 +9,14 @@ public class TicTacComm {
         try {
             Naming.rebind("rmi://localhost" + ":" + port.toString() + "/Player" + player, obj);
         } catch (Exception e) {
-            // TODO: handle exception
+            throw new TicTacServerException("Impossible de préparer la réception rmi : " + e.getMessage());
         }
         // Coté client
         try {
             remoteObj = (TicTacInterface) Naming
                     .lookup("rmi://" + address + ":" + port.toString() + "/Player" + (player == "X" ? "O" : "X"));
         } catch (Exception e) {
-
+            throw new TicTacClientException("Impossible de préparer la réception rmi : " + e.getMessage());
         }
     }
 
