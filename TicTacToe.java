@@ -2,16 +2,32 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class TicTacToe extends JFrame implements ActionListener,TicTacInterface{
+public class TicTacToe extends JFrame implements ActionListener, TicTacInterface{
 
     private JPanel g_panel = new JPanel(); 
     private JPanel t_panel = new JPanel();
     private String joueur;
     private JButton[][] liste_boutons = new JButton[3][3];
+    private TicTacComm autreJoueur;
     JLabel label;
 
-    public TicTacToe(){ 
+    public TicTacToe(String joueur, String adresse){ 
         super("TicTacToe");
+        try{
+            this.autreJoueur =  new TicTacCommFactory((TicTacInterface) this, joueur)
+                                .address(adresse)
+                                .build();
+        }catch (TicTacServerException e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erreur lors de l'ouverture de RMI", "Erreur", JOptionPane.ERROR_MESSAGE);
+            System.exit(ABORT);
+        }
+        catch (TicTacClientException e){
+            System.err.println(e.getMessage());
+            JOptionPane.showMessageDialog(this, "Erreur lors de l'ouverture de RMI", "Erreur", JOptionPane.ERROR_MESSAGE);
+
+        }
+        
         this.setVisible(true);
        
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //ferme la fenêtre
@@ -49,10 +65,12 @@ public class TicTacToe extends JFrame implements ActionListener,TicTacInterface{
                     if (source == this.liste_boutons[i][j]){ // action a effectuer
                         if(this.joueur.equals("J1")){
                             setX(i,j);
+                            autreJoueur.remoteObj().setX(i, j);
                             this.liste_boutons[i][j].setEnabled(false);
                             this.joueur="J2";
                         }else{
                             setO(i,j);
+                            autreJoueur.remoteObj().setO(i, j);
                             this.liste_boutons[i][j].setEnabled(false);
                             this.joueur="J1";
                         }
@@ -106,7 +124,7 @@ public class TicTacToe extends JFrame implements ActionListener,TicTacInterface{
     public static void main(String[] toto){
         javax.swing.SwingUtilities.invokeLater(new Runnable(){
             public void run(){
-                new TicTacToe();   
+                new TicTacToe("X", "locahost");   
             }
         });
     }

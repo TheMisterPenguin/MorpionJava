@@ -3,7 +3,7 @@ import java.rmi.*;
 public class TicTacComm {
     private TicTacInterface remoteObj;
 
-    public TicTacComm(TicTacInterface obj, String player, String address, Integer port) throws Exception{
+    public TicTacComm(TicTacInterface obj, String player, String address, Integer port) throws TicTacClientException, TicTacServerException{
         // On setup la connection RMI
         // Coté serveur
         try {
