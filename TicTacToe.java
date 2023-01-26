@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class TicTacToe extends JFrame implements ActionListener{
+public class TicTacToe extends JFrame implements ActionListener,TicTacInterface{
 
     private JPanel g_panel = new JPanel(); 
     private JPanel t_panel = new JPanel();
@@ -112,12 +112,3 @@ public class TicTacToe extends JFrame implements ActionListener{
     }
 
 }
-
-
-
-/*
-    ---> Créer interface Morpion
-    --> Deux Images rond et croix
-    -> S'envoyer l'image à tel position
-
-*/
