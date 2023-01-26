@@ -19,7 +19,7 @@ public class TicTacCommFactory{
         return this;
     }
 
-    public TicTacComm build() throws Exception{
+    public TicTacComm build() throws TicTacClientException, TicTacServerException{
         return new TicTacComm(locObj, player, address, port);
     }
 }
